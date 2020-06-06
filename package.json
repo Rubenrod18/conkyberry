@@ -1,0 +1,29 @@
+{
+  "name": "conkyberry",
+  "version": "0.0.0",
+  "description": "Web application developed with Python and ReactJS for monitoring Raspberry Pi 4 model B",
+  "scripts": {
+    "first-release": "npm run release -- --first-release",
+    "patch": "npm run release -- --release-as patch",
+    "minor": "npm run release -- --release-as minor",
+    "major": "npm run release -- --release-as major",
+    "release": "standard-version",
+    "publish-to-master": "git push --follow-tags origin master"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rubenrod18/conkyberry.git"
+  },
+  "author": "Rubenrod18",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Rubenrod18/conkyberry/issues"
+  },
+  "homepage": "https://github.com/Rubenrod18/conkyberry#readme",
+  "engines": {
+    "node": ">=10.18.1"
+  },
+  "devDependencies": {
+    "standard-version": "^8.0.0"
+  }
+}
