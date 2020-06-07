@@ -1,4 +1,5 @@
 # requirements.in
 Flask
+flask-mongoengine
 pip-tools
 python-dotenv

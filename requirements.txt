@@ -5,14 +5,19 @@
 #    pip-compile
 #
 click==7.1.2              # via flask, pip-tools
-flask==1.1.2              # via -r requirements.in
-itsdangerous==1.1.0       # via flask
+flask-mongoengine==0.9.5  # via -r requirements.in
+flask-wtf==0.14.3         # via flask-mongoengine
+flask==1.1.2              # via -r requirements.in, flask-mongoengine, flask-wtf
+itsdangerous==1.1.0       # via flask, flask-wtf
 jinja2==2.11.2            # via flask
 markupsafe==1.1.1         # via jinja2
+mongoengine==0.20.0       # via flask-mongoengine
 pip-tools==5.2.0          # via -r requirements.in
+pymongo==3.10.1           # via mongoengine
 python-dotenv==0.13.0     # via -r requirements.in
-six==1.15.0               # via pip-tools
+six==1.15.0               # via flask-mongoengine, pip-tools
 werkzeug==1.0.1           # via flask
+wtforms==2.3.1            # via flask-wtf
 
 # The following packages are considered to be unsafe in a requirements file:
 # pip
