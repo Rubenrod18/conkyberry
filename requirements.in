@@ -1,5 +1,7 @@
 # requirements.in
 Flask
+Flask-GraphQL
 flask-mongoengine
+graphene-mongo
 pip-tools
 python-dotenv

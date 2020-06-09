@@ -4,18 +4,29 @@
 #
 #    pip-compile
 #
+aniso8601==7.0.0          # via graphene
 click==7.1.2              # via flask, pip-tools
+flask-graphql==2.0.1      # via -r requirements.in
 flask-mongoengine==0.9.5  # via -r requirements.in
 flask-wtf==0.14.3         # via flask-mongoengine
-flask==1.1.2              # via -r requirements.in, flask-mongoengine, flask-wtf
+flask==1.1.2              # via -r requirements.in, flask-graphql, flask-mongoengine, flask-wtf
+graphene-mongo==0.2.12    # via -r requirements.in
+graphene==2.1.8           # via graphene-mongo
+graphql-core==2.3.2       # via flask-graphql, graphene, graphql-relay, graphql-server-core
+graphql-relay==2.0.1      # via graphene
+graphql-server-core==1.2.0  # via flask-graphql
+iso8601==0.1.12           # via graphene-mongo
 itsdangerous==1.1.0       # via flask, flask-wtf
 jinja2==2.11.2            # via flask
-markupsafe==1.1.1         # via jinja2
-mongoengine==0.20.0       # via flask-mongoengine
+markupsafe==1.1.1         # via jinja2, wtforms
+mongoengine==0.20.0       # via flask-mongoengine, graphene-mongo
 pip-tools==5.2.0          # via -r requirements.in
+promise==2.3              # via graphql-core, graphql-relay, graphql-server-core
 pymongo==3.10.1           # via mongoengine
 python-dotenv==0.13.0     # via -r requirements.in
-six==1.15.0               # via flask-mongoengine, pip-tools
+rx==1.6.1                 # via graphql-core
+singledispatch==3.4.0.3   # via graphene-mongo
+six==1.15.0               # via flask-mongoengine, graphene, graphql-core, graphql-relay, pip-tools, promise, singledispatch
 werkzeug==1.0.1           # via flask
 wtforms==2.3.1            # via flask-wtf
 
