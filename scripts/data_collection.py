@@ -2,7 +2,7 @@ import subprocess
 
 import psutil
 
-from app.models import Resource as ResourceModel, ResourceData as ResourceDataModel
+from ..app.models import Resource as ResourceModel, ResourceData as ResourceDataModel
 
 
 def _get_cpu_data() -> list:
@@ -88,7 +88,7 @@ def _get_memory_data() -> list:
     ]
 
 
-def _get_system_data() -> None:
+def _get_system_data() -> list:
     # uname -r
     # lscpu
     # cat /sys/class/net/eth0/address
