@@ -20,7 +20,7 @@ def _get_cpu_data() -> list:
         },
         {
             'resource_name': 'CPU average temperature',
-            'resource_type': 'string',
+            'resource_type': 'str',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
             'resource_value': str(psutil.sensors_temperatures().get('cpu-thermal')[0].current),
         },
@@ -40,6 +40,7 @@ def _get_cpu_data() -> list:
 
 
 def _get_gpu_data() -> list:
+    # TODO: uncomment when Raspberry Foundtaion releases Raspberry OS 64 bits stable
     """
     return [
         {
