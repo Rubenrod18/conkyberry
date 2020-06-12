@@ -40,6 +40,7 @@ def _get_cpu_data() -> list:
 
 
 def _get_gpu_data() -> list:
+    """
     return [
         {
             'resource_name': 'GPU average temperature',
@@ -48,6 +49,8 @@ def _get_gpu_data() -> list:
             'resource_value': str(subprocess.run(['/opt/vc/bin/vcgencmd', 'measure_temp'])),
         },
     ]
+    """
+    return []
 
 
 def _get_memory_data() -> list:
@@ -149,12 +152,12 @@ def _get_hard_disk_data() -> list:
 def _get_network_data() -> list:
     """
     TODO: checkout this
-    ps = subprocess.Popen(('ps', '-A'), stdout=subprocess.PIPE)
+    ps = subprocess.Popen(('vnstat'), stdout=subprocess.PIPE)
     output = subprocess.check_output(('grep', 'process_name'), stdin=ps.stdout)
     ps.wait()
     """
-    data = subprocess.run([' sudo vnstat -u | vnstat --oneline'])
-    data = data.split(';')
+    data = subprocess.run(['vnstat', '--oneline'], capture_output=True)
+    data = data.stdout.decode('utf-8').split(';')
 
     return [
         {
@@ -167,7 +170,8 @@ def _get_network_data() -> list:
             'resource_name': 'Private IP',
             'resource_type': 'str',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
-            'resource_value': str(subprocess.run(["ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'"])),
+            'resource_value': str(subprocess.run([
+                                                     "ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'"])),
         },
         {
             'resource_name': 'Upload Kb/s',
@@ -220,7 +224,3 @@ def init_collection_data() -> None:
     resource = ResourceModel()
     resource.data = resource_data_list
     resource.save()
-
-
-if __name__ == '__main__':
-    init_collection_data()
