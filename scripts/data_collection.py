@@ -20,7 +20,7 @@ def _get_cpu_data() -> list:
         },
         {
             'resource_name': 'CPU average temperature',
-            'resource_type': 'str',
+            'resource_type': 'float',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
             'resource_value': str(psutil.sensors_temperatures().get('cpu-thermal')[0].current),
         },
@@ -32,7 +32,7 @@ def _get_cpu_data() -> list:
         },
         {
             'resource_name': 'Top 5 CPU consuming processes',
-            'resource_type': 'tuple',
+            'resource_type': 'list',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
             'resource_value': str(top_five_processes),
         }
@@ -79,7 +79,7 @@ def _get_memory_data() -> list:
         },
         {
             'resource_name': 'Top 5 RAM consuming processes',
-            'resource_type': 'float',
+            'resource_type': 'list',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
             'resource_value': str(tmp),
         },
@@ -104,36 +104,44 @@ def _get_system_data() -> list:
             'resource_name': 'Linux kernel version',
             'resource_type': 'str',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
-            'resource_value': str(subprocess.run(['uname', '-r'])),
+            'resource_value': str(subprocess.run(['uname', '-r']).stdout.decode('utf-8')),
         },
         {
             'resource_name': 'CPU model',
             'resource_type': 'str',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
-            'resource_value': str(subprocess.run(['lscpu'])),
+            'resource_value': str(subprocess.run(['lscpu']).stdout.decode('utf-8')),
         },
         {
             'resource_name': 'MAC',
             'resource_type': 'str',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
-            'resource_value': str(subprocess.run(['cat', '/sys/class/net/eth0/address'])),
+            'resource_value': str(subprocess.run(['cat', '/sys/class/net/eth0/address']).stdout.decode('utf-8')),
         },
         {
             'resource_name': 'Uptime server',
             'resource_type': 'str',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
-            'resource_value': str(subprocess.run(['uptime', '-s'])),
+            'resource_value': str(subprocess.run(['uptime', '-s']).stdout.decode('utf-8')),
         },
     ]
 
 
 def _get_hard_disk_data() -> list:
+    hd_data = psutil.disk_usage('/')
+    data = {
+        'total': hd_data.total,
+        'used': hd_data.used,
+        'free': hd_data.free,
+        'percent': hd_data.percent,
+    }
+
     return [
         {
             'resource_name': 'Hard disk storage: /',
-            'resource_type': 'str',
+            'resource_type': 'dict',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
-            'resource_value': str(psutil.disk_usage('/')),
+            'resource_value': str(data),
         },
     ]
 
@@ -161,37 +169,37 @@ def _get_network_data() -> list:
             'resource_value': str(private_ip),
         },
         {
-            'resource_name': 'Upload Kb/s',
+            'resource_name': 'Download',
             'resource_type': 'str',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
             'resource_value': str(vnstat_data[6]),
         },
         {
-            'resource_name': 'Upload Kb/s at day',
+            'resource_name': 'Download at day',
             'resource_type': 'str',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
             'resource_value': str(vnstat_data[3]),
         },
         {
-            'resource_name': 'Upload Kb/s at month',
+            'resource_name': 'Download at month',
             'resource_type': 'str',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
             'resource_value': str(vnstat_data[8]),
         },
         {
-            'resource_name': 'Download Kb/s',
+            'resource_name': 'Upload packages',
             'resource_type': 'str',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
             'resource_value': str(vnstat_data[11]),
         },
         {
-            'resource_name': 'Download Kb/s at day',
+            'resource_name': 'Upload packages at day',
             'resource_type': 'str',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
             'resource_value': str(vnstat_data[4]),
         },
         {
-            'resource_name': 'Download Kb/s at month',
+            'resource_name': 'Upload packages at month',
             'resource_type': 'str',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
             'resource_value': str(vnstat_data[9]),

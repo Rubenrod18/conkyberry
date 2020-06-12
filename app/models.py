@@ -5,7 +5,7 @@ from .extensions import mongoengine as db
 
 logger = logging.getLogger(__name__)
 
-_TYPE_VAR_CHOICES = ('str', 'int', 'list', 'tuple', 'float')
+_TYPE_VAR_CHOICES = ('str', 'int', 'list', 'tuple', 'float', 'dict', )
 
 
 class ResourceData(db.EmbeddedDocument):
