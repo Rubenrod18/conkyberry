@@ -138,7 +138,8 @@ def _get_hard_disk_data() -> list:
 
 
 def _get_network_data() -> list:
-    vnstat_data = subprocess.run(['vnstat', '--oneline']).stdout.split(';')
+    ps = subprocess.run(['vnstat', '--oneline'], capture_output=True)
+    vnstat_data = ps.stdout.decode('utf-8').split(';')
 
     private_ip_command = "ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'"
     ps = subprocess.Popen(private_ip_command, shell=True, stdout=subprocess.PIPE)
