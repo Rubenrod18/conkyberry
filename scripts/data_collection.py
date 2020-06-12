@@ -138,8 +138,7 @@ def _get_hard_disk_data() -> list:
 
 
 def _get_network_data() -> list:
-    data = subprocess.run(['vnstat', '--oneline'])
-    data = data.split(';')
+    vnstat_data = subprocess.run(['vnstat', '--oneline']).stdout.split(';')
 
     private_ip_command = "ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'"
     ps = subprocess.Popen(private_ip_command, shell=True, stdout=subprocess.PIPE)
@@ -162,37 +161,37 @@ def _get_network_data() -> list:
             'resource_name': 'Upload Kb/s',
             'resource_type': 'str',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
-            'resource_value': str(data[6]),
+            'resource_value': str(vnstat_data[6]),
         },
         {
             'resource_name': 'Upload Kb/s at day',
             'resource_type': 'str',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
-            'resource_value': str(data[3]),
+            'resource_value': str(vnstat_data[3]),
         },
         {
             'resource_name': 'Upload Kb/s at month',
             'resource_type': 'str',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
-            'resource_value': str(data[8]),
+            'resource_value': str(vnstat_data[8]),
         },
         {
             'resource_name': 'Download Kb/s',
             'resource_type': 'str',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
-            'resource_value': str(data[11]),
+            'resource_value': str(vnstat_data[11]),
         },
         {
             'resource_name': 'Download Kb/s at day',
             'resource_type': 'str',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
-            'resource_value': str(data[4]),
+            'resource_value': str(vnstat_data[4]),
         },
         {
             'resource_name': 'Download Kb/s at month',
             'resource_type': 'str',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
-            'resource_value': str(data[9]),
+            'resource_value': str(vnstat_data[9]),
         },
     ]
 
