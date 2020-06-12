@@ -150,7 +150,8 @@ def _get_network_data() -> list:
             'resource_name': 'Public IP',
             'resource_type': 'str',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
-            'resource_value': subprocess.run(['curl', 'https://ipinfo.io/ip']).stdout.decode('utf-8'),
+            'resource_value': subprocess.run(['curl', 'https://ipinfo.io/ip'], capture_output=True).stdout.decode(
+                'utf-8'),
         },
         {
             'resource_name': 'Private IP',
