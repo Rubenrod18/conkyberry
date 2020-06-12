@@ -134,44 +134,41 @@ def _get_hard_disk_data() -> list:
             'resource_graph': {'type': 'pie', 'color': '#000099'},
             'resource_value': str(psutil.disk_usage('/')),
         },
-        {
-            'resource_name': 'Hard disk storage: /home/pi',
-            'resource_type': 'str',
-            'resource_graph': {'type': 'pie', 'color': '#000099'},
-            'resource_value': str(psutil.disk_usage('/home/pi')),
-        },
-        {
-            'resource_name': 'Hard disk storage: /home/dev',
-            'resource_type': 'str',
-            'resource_graph': {'type': 'pie', 'color': '#000099'},
-            'resource_value': str(psutil.disk_usage('/home/dev')),
-        },
     ]
 
 
 def _get_network_data() -> list:
     """
     TODO: checkout this
-    ps = subprocess.Popen(('vnstat'), stdout=subprocess.PIPE)
+    ps = subprocess.Popen(('ps', '-A'), stdout=subprocess.PIPE)
     output = subprocess.check_output(('grep', 'process_name'), stdin=ps.stdout)
     ps.wait()
+
+    tmp = subprocess.Popen(("ifconfig"), stdout=subprocess.PIPE)
+    tmp2 = subprocess.Popen(("grep", "-Eo", "'inet (addr:)?([0-9]*\.){3}[0-9]*'"), stdout=subprocess.PIPE, stdin=tmp.stdout)
+    tmp3 = subprocess.Popen(("grep", "-Eo", "'([0-9]*\.){3}[0-9]*'"), stdout=subprocess.PIPE, stdin=tmp2.stdout)
+    tmp4 = subprocess.check_output(("grep", "-v", "'127.0.0.1'"), stdin=tmp3.stdout)
+    tmp4.wait()
     """
-    data = subprocess.run(['vnstat', '--oneline'], capture_output=True)
-    data = data.stdout.decode('utf-8').split(';')
+    data = subprocess.run(['vnstat -u | vnstat --oneline'])
+    data = data.split(';')
+
+    private_ip_command = "ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'"
+    ps = subprocess.Popen(private_ip_command, shell=True, stdout=subprocess.PIPE)
+    private_ip = ps.read().decode('utf-8').replace('\\n','')
 
     return [
         {
             'resource_name': 'Public IP',
             'resource_type': 'str',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
-            'resource_value': str(subprocess.run(['curl', 'https://ipinfo.io/ip'])),
+            'resource_value': subprocess.run(['curl', 'https://ipinfo.io/ip']).stdout.decode('utf-8'),
         },
         {
             'resource_name': 'Private IP',
             'resource_type': 'str',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
-            'resource_value': str(subprocess.run([
-                                                     "ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'"])),
+            'resource_value': str(private_ip),
         },
         {
             'resource_name': 'Upload Kb/s',
