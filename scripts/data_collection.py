@@ -104,25 +104,26 @@ def _get_system_data() -> list:
             'resource_name': 'Linux kernel version',
             'resource_type': 'str',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
-            'resource_value': str(subprocess.run(['uname', '-r']).stdout.decode('utf-8')),
+            'resource_value': str(subprocess.run(['uname', '-r'], capture_output=True).stdout.decode('utf-8')),
         },
         {
             'resource_name': 'CPU model',
             'resource_type': 'str',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
-            'resource_value': str(subprocess.run(['lscpu']).stdout.decode('utf-8')),
+            'resource_value': str(subprocess.run(['lscpu'], capture_output=True).stdout.decode('utf-8')),
         },
         {
             'resource_name': 'MAC',
             'resource_type': 'str',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
-            'resource_value': str(subprocess.run(['cat', '/sys/class/net/eth0/address']).stdout.decode('utf-8')),
+            'resource_value': str(subprocess.run(['cat', '/sys/class/net/eth0/address'],
+                                                 capture_output=True).stdout.decode('utf-8')),
         },
         {
             'resource_name': 'Uptime server',
             'resource_type': 'str',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
-            'resource_value': str(subprocess.run(['uptime', '-s']).stdout.decode('utf-8')),
+            'resource_value': str(subprocess.run(['uptime', '-s'], capture_output=True).stdout.decode('utf-8')),
         },
     ]
 
