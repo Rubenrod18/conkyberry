@@ -2,7 +2,7 @@ import subprocess
 
 import psutil
 
-from ..app.models import Resource as ResourceModel, ResourceData as ResourceDataModel
+from app.models import Resource as ResourceModel, ResourceData as ResourceDataModel
 
 
 def _get_cpu_data() -> list:
@@ -220,3 +220,7 @@ def init_collection_data() -> None:
     resource = ResourceModel()
     resource.data = resource_data_list
     resource.save()
+
+
+if __name__ == '__main__':
+    init_collection_data()
