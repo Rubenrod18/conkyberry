@@ -2,7 +2,7 @@ import graphene
 from bson import ObjectId
 from graphene_mongo import MongoengineObjectType
 
-from .models import Resource as ResourceModel, ResourceData as ResourceDataModel
+from .models import Resource as ResourceModel, ResourceData as ResourceDataModel, ResourceGraph as ResourceGraphModel
 
 
 class CustomNode(graphene.Node):
@@ -12,6 +12,12 @@ class CustomNode(graphene.Node):
     @staticmethod
     def to_global_id(type, id):
         return id
+
+
+class ResourceGraph(MongoengineObjectType):
+    class Meta:
+        model = ResourceGraphModel
+        interfaces = (CustomNode,)
 
 
 class ResourceData(MongoengineObjectType):
@@ -38,4 +44,4 @@ class Query(graphene.ObjectType):
         return ResourceModel.objects(id=ObjectId(id)).get()
 
 
-schema = graphene.Schema(query=Query, types=[Resource, ResourceData])
+schema = graphene.Schema(query=Query, types=[Resource, ResourceData, ResourceGraph])
