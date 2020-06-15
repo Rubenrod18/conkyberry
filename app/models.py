@@ -60,7 +60,6 @@ class ResourceData(db.EmbeddedDocument):
 class Resource(db.Document):
     meta = {
         'collection': 'resources',
-        'allow_inheritance': True,
     }
 
     created_at = db.DateTimeField(default=datetime.utcnow(), unique=True)
