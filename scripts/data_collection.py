@@ -5,10 +5,8 @@ import psutil
 from app.models import Resource as ResourceModel, ResourceData as ResourceDataModel, \
     ResourceGraph as ResourceGraphModel, RESOURCE_FIELDS_BY_NAME
 
-resource_graph = ResourceGraphModel.objects[:1]
 
-
-def _get_cpu_data() -> list:
+def _get_cpu_data(resource_graph: ResourceGraphModel) -> list:
     top_five_processes = [(p.pid, p.info['name'], sum(p.info['cpu_times'])) for p in
                           sorted(psutil.process_iter(['name', 'cpu_times']),
                                  key=lambda p: sum(p.info['cpu_times'][:2]))][-5:]
@@ -42,7 +40,7 @@ def _get_cpu_data() -> list:
     ]
 
 
-def _get_gpu_data() -> list:
+def _get_gpu_data(resource_graph: ResourceGraphModel) -> list:
     # TODO: uncomment when Raspberry Foundtaion releases Raspberry OS 64 bits stable
     """
     return [
@@ -57,7 +55,7 @@ def _get_gpu_data() -> list:
     return []
 
 
-def _get_memory_data() -> list:
+def _get_memory_data(resource_graph: ResourceGraphModel) -> list:
     # RAM and SWAP
     mem = psutil.virtual_memory()
     swap = psutil.swap_memory()
@@ -95,7 +93,7 @@ def _get_memory_data() -> list:
     ]
 
 
-def _get_system_data() -> list:
+def _get_system_data(resource_graph: ResourceGraphModel) -> list:
     # uname -r
     # lscpu
     # cat /sys/class/net/eth0/address
@@ -131,7 +129,7 @@ def _get_system_data() -> list:
     ]
 
 
-def _get_hard_disk_data() -> list:
+def _get_hard_disk_data(resource_graph: ResourceGraphModel) -> list:
     hd_data = psutil.disk_usage('/')
     data = {
         'total': hd_data.total,
@@ -150,7 +148,7 @@ def _get_hard_disk_data() -> list:
     ]
 
 
-def _get_network_data() -> list:
+def _get_network_data(resource_graph: ResourceGraphModel) -> list:
     ps = subprocess.run(['vnstat', '--oneline'], capture_output=True)
     vnstat_data = ps.stdout.decode('utf-8').split(';')
 
@@ -212,9 +210,11 @@ def _get_network_data() -> list:
 
 
 def init_collection_data() -> None:
+    resource_graph = ResourceGraphModel.objects[:1].first()
+
     resource_data_list = []
-    data = (_get_cpu_data() + _get_gpu_data() + _get_memory_data() +
-            _get_system_data() + _get_hard_disk_data() + _get_network_data())
+    data = (_get_cpu_data(resource_graph) + _get_gpu_data(resource_graph) + _get_memory_data(resource_graph) +
+            _get_system_data(resource_graph) + _get_hard_disk_data(resource_graph) + _get_network_data(resource_graph))
 
     for item in data:
         resource_data = ResourceDataModel(**item)

@@ -3,7 +3,7 @@ import time
 from app.models import ResourceGraph as ResourceGraphModel
 
 
-def seed_resource_graph() -> None:
+def seed_resource_graphs() -> None:
     print('Seeding ResourceGraph...')
     start = time.time()
 

@@ -19,7 +19,7 @@ def get_data_collection() -> None:
 
 @app.cli.command('seed', help='Script to generate Resource Graphs')
 def seed() -> None:
-    seed_resource_graph()
+    seed_resource_graphs()
 
 
 @app.shell_context_processor
