@@ -20,8 +20,9 @@ itsdangerous==1.1.0       # via flask, flask-wtf
 jinja2==2.11.2            # via flask
 markupsafe==1.1.1         # via jinja2, wtforms
 mongoengine==0.20.0       # via flask-mongoengine, graphene-mongo
-pip-tools==5.2.0          # via -r requirements.in
+pip-tools==5.2.1          # via -r requirements.in
 promise==2.3              # via graphql-core, graphql-relay, graphql-server-core
+psutil==5.7.0             # via -r requirements.in
 pymongo==3.10.1           # via mongoengine
 python-dotenv==0.13.0     # via -r requirements.in
 rx==1.6.1                 # via graphql-core
