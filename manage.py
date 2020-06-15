@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from app import create_app
 from app.extensions import mongoengine
 from scripts.data_collection import init_collection_data
-from scripts.seeds import seed_resource_graph
+from scripts.seeds import seed_resource_graphs
 
 load_dotenv()
 
