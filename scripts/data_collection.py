@@ -2,7 +2,7 @@ import subprocess
 
 import psutil
 
-from app.models import Resource as ResourceModel, ResourceData as ResourceDataModel
+from app.models import Resource as ResourceModel, ResourceData as ResourceDataModel, RESOURCE_FIELDS_BY_NAME
 
 
 def _get_cpu_data() -> list:
@@ -13,25 +13,25 @@ def _get_cpu_data() -> list:
 
     return [
         {
-            'resource_name': 'CPU average usage',
+            'resource_name': RESOURCE_FIELDS_BY_NAME['CPU average usage'],
             'resource_type': 'float',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
             'resource_value': str(psutil.cpu_percent()),
         },
         {
-            'resource_name': 'CPU average temperature',
+            'resource_name': RESOURCE_FIELDS_BY_NAME['CPU average temperature'],
             'resource_type': 'float',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
             'resource_value': str(psutil.sensors_temperatures().get('cpu-thermal')[0].current),
         },
         {
-            'resource_name': 'per-CPU average usage',
+            'resource_name': RESOURCE_FIELDS_BY_NAME['per-CPU average usage'],
             'resource_type': 'list',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
             'resource_value': str(psutil.cpu_percent(percpu=True)),
         },
         {
-            'resource_name': 'Top 5 CPU consuming processes',
+            'resource_name': RESOURCE_FIELDS_BY_NAME['Top 5 CPU consuming processes'],
             'resource_type': 'list',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
             'resource_value': str(top_five_processes),
@@ -44,7 +44,7 @@ def _get_gpu_data() -> list:
     """
     return [
         {
-            'resource_name': 'GPU average temperature',
+            'resource_name': RESOURCE_FIELDS_BY_NAME['GPU average temperature'],
             'resource_type': 'float',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
             'resource_value': str(subprocess.run(['/opt/vc/bin/vcgencmd', 'measure_temp'])),
@@ -72,19 +72,19 @@ def _get_memory_data() -> list:
 
     return [
         {
-            'resource_name': 'RAM average usage',
+            'resource_name': RESOURCE_FIELDS_BY_NAME['RAM average usage'],
             'resource_type': 'float',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
             'resource_value': str(mem.percent),
         },
         {
-            'resource_name': 'Top 5 RAM consuming processes',
+            'resource_name': RESOURCE_FIELDS_BY_NAME['Top 5 RAM consuming processes'],
             'resource_type': 'list',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
             'resource_value': str(tmp),
         },
         {
-            'resource_name': 'SWAP average usage',
+            'resource_name': RESOURCE_FIELDS_BY_NAME['SWAP average usage'],
             'resource_type': 'float',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
             'resource_value': str(swap.percent),
@@ -101,26 +101,26 @@ def _get_system_data() -> list:
     # TODO: Weather API
     return [
         {
-            'resource_name': 'Linux kernel version',
+            'resource_name': RESOURCE_FIELDS_BY_NAME['Linux kernel version'],
             'resource_type': 'str',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
             'resource_value': str(subprocess.run(['uname', '-r'], capture_output=True).stdout.decode('utf-8')),
         },
         {
-            'resource_name': 'CPU model',
+            'resource_name': RESOURCE_FIELDS_BY_NAME['CPU model'],
             'resource_type': 'str',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
             'resource_value': str(subprocess.run(['lscpu'], capture_output=True).stdout.decode('utf-8')),
         },
         {
-            'resource_name': 'MAC',
+            'resource_name': RESOURCE_FIELDS_BY_NAME['MAC'],
             'resource_type': 'str',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
             'resource_value': str(subprocess.run(['cat', '/sys/class/net/eth0/address'],
                                                  capture_output=True).stdout.decode('utf-8')),
         },
         {
-            'resource_name': 'Uptime server',
+            'resource_name': RESOURCE_FIELDS_BY_NAME['Uptime server'],
             'resource_type': 'str',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
             'resource_value': str(subprocess.run(['uptime', '-s'], capture_output=True).stdout.decode('utf-8')),
@@ -139,7 +139,7 @@ def _get_hard_disk_data() -> list:
 
     return [
         {
-            'resource_name': 'Hard disk storage: /',
+            'resource_name': RESOURCE_FIELDS_BY_NAME['Hard disk storage: /'],
             'resource_type': 'dict',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
             'resource_value': str(data),
@@ -157,50 +157,50 @@ def _get_network_data() -> list:
 
     return [
         {
-            'resource_name': 'Public IP',
+            'resource_name': RESOURCE_FIELDS_BY_NAME['Public IP'],
             'resource_type': 'str',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
             'resource_value': subprocess.run(['curl', 'https://ipinfo.io/ip'], capture_output=True).stdout.decode(
                 'utf-8'),
         },
         {
-            'resource_name': 'Private IP',
+            'resource_name': RESOURCE_FIELDS_BY_NAME['Private IP'],
             'resource_type': 'str',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
             'resource_value': str(private_ip),
         },
         {
-            'resource_name': 'Download',
+            'resource_name': RESOURCE_FIELDS_BY_NAME['Download'],
             'resource_type': 'str',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
             'resource_value': str(vnstat_data[6]),
         },
         {
-            'resource_name': 'Download at day',
+            'resource_name': RESOURCE_FIELDS_BY_NAME['Download at day'],
             'resource_type': 'str',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
             'resource_value': str(vnstat_data[3]),
         },
         {
-            'resource_name': 'Download at month',
+            'resource_name': RESOURCE_FIELDS_BY_NAME['Download at month'],
             'resource_type': 'str',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
             'resource_value': str(vnstat_data[8]),
         },
         {
-            'resource_name': 'Upload packages',
+            'resource_name': RESOURCE_FIELDS_BY_NAME['Upload packages'],
             'resource_type': 'str',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
             'resource_value': str(vnstat_data[11]),
         },
         {
-            'resource_name': 'Upload packages at day',
+            'resource_name': RESOURCE_FIELDS_BY_NAME['Upload packages at day'],
             'resource_type': 'str',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
             'resource_value': str(vnstat_data[4]),
         },
         {
-            'resource_name': 'Upload packages at month',
+            'resource_name': RESOURCE_FIELDS_BY_NAME['Upload packages at month'],
             'resource_type': 'str',
             'resource_graph': {'type': 'pie', 'color': '#000099'},
             'resource_value': str(vnstat_data[9]),
