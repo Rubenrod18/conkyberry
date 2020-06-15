@@ -53,7 +53,7 @@ class ResourceGraph(db.Document):
 class ResourceData(db.EmbeddedDocument):
     resource_name = db.StringField(required=True, choices=RESOURCE_FIELD_IDS)
     resource_type = db.StringField(required=True, choices=_TYPE_VAR_CHOICES)
-    resource_graph = db.ReferenceField(ResourceGraph)
+    resource_graph = db.ReferenceField('ResourceGraph')
     resource_value = db.StringField(required=True)
 
 
