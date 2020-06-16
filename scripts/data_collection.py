@@ -49,15 +49,10 @@ def _get_memory_data(resource_graph: ResourceGraphModel) -> list:
     mem = psutil.virtual_memory()
     swap = psutil.swap_memory()
 
-    tmp = [
-              (p.pid, p.info['name'], p.info['memory_info'].rss / 1000000)
-              for p in sorted(
-            psutil.process_iter(
-                ['name', 'memory_info', 'cpu_times']
-            ),
-            key=lambda p: p.info['memory_info'].rss
-        )
-          ][-5:]
+    tmp = [(p.pid, p.info['name'], p.info['memory_info'].rss / 1000000)
+           for p in sorted(psutil.process_iter(['name', 'memory_info']),
+                           key=lambda p: p.info['memory_info'].rss)
+           ][-5:]
     tmp.reverse()
 
     return [
@@ -88,13 +83,15 @@ def _get_system_data(resource_graph: ResourceGraphModel) -> list:
             'resource_name': RESOURCE_FIELDS_BY_NAME['Linux kernel version'],
             'resource_type': 'str',
             'resource_graph': resource_graph,
-            'resource_value': str(subprocess.run(['uname', '-r'], capture_output=True).stdout.decode('utf-8')),
+            'resource_value': str(subprocess.run(['uname', '-r'],
+                                                 capture_output=True).stdout.decode('utf-8')),
         },
         {
             'resource_name': RESOURCE_FIELDS_BY_NAME['CPU model'],
             'resource_type': 'str',
             'resource_graph': resource_graph,
-            'resource_value': str(subprocess.run(['lscpu'], capture_output=True).stdout.decode('utf-8')),
+            'resource_value': str(subprocess.run(['lscpu'],
+                                                 capture_output=True).stdout.decode('utf-8')),
         },
         {
             'resource_name': RESOURCE_FIELDS_BY_NAME['MAC'],
@@ -107,7 +104,8 @@ def _get_system_data(resource_graph: ResourceGraphModel) -> list:
             'resource_name': RESOURCE_FIELDS_BY_NAME['Uptime server'],
             'resource_type': 'str',
             'resource_graph': resource_graph,
-            'resource_value': str(subprocess.run(['uptime', '-s'], capture_output=True).stdout.decode('utf-8')),
+            'resource_value': str(subprocess.run(['uptime', '-s'],
+                                                 capture_output=True).stdout.decode('utf-8')),
         },
     ]
 
@@ -199,8 +197,9 @@ def init_collection_data() -> None:
     resource_graph = ResourceGraphModel.objects[:1].first()
 
     resource_data_list = []
-    data = (_get_cpu_data(resource_graph) + _get_gpu_data(resource_graph) + _get_memory_data(resource_graph) +
-            _get_system_data(resource_graph) + _get_hard_disk_data(resource_graph) + _get_network_data(resource_graph))
+    data = (_get_cpu_data(resource_graph) + _get_gpu_data(resource_graph) +
+            _get_memory_data(resource_graph) + _get_system_data(resource_graph) +
+            _get_hard_disk_data(resource_graph) + _get_network_data(resource_graph))
 
     for item in data:
         resource_data = ResourceDataModel(**item)
