@@ -7,29 +7,6 @@ from app.models import Resource as ResourceModel, ResourceData as ResourceDataMo
 
 
 def _get_cpu_data(resource_graph: ResourceGraphModel) -> list:
-    def _key_fnc(p) -> float:
-        try:
-            p = psutil.Process(p.pid)
-            return p.cpu_percent(interval=1)
-        except Exception:
-            return 0.0
-
-    tmp = sorted(
-        psutil.process_iter(['name', 'cpu_percent']),
-        key=lambda p: _key_fnc(p)
-    )
-    top_five_processes = [(p.pid, p.info['name'], p.info['cpu_percent']) for p in tmp][-5:]
-    top_five_processes.reverse()
-
-    for i, item in enumerate(top_five_processes):
-        p = psutil.Process(item[0])
-        for x in range(100):
-            tmp = p.cpu_percent(interval=1)
-            if tmp != 0.0:
-                item = (item[0], item[1], tmp)
-                top_five_processes[i] = item
-                break
-
     return [
         {
             'resource_name': RESOURCE_FIELDS_BY_NAME['CPU average usage'],
@@ -49,12 +26,6 @@ def _get_cpu_data(resource_graph: ResourceGraphModel) -> list:
             'resource_graph': resource_graph,
             'resource_value': str(psutil.cpu_percent(percpu=True)),
         },
-        {
-            'resource_name': RESOURCE_FIELDS_BY_NAME['Top 5 CPU consuming processes'],
-            'resource_type': 'list',
-            'resource_graph': resource_graph,
-            'resource_value': str(top_five_processes),
-        }
     ]
 
 
@@ -112,12 +83,6 @@ def _get_memory_data(resource_graph: ResourceGraphModel) -> list:
 
 
 def _get_system_data(resource_graph: ResourceGraphModel) -> list:
-    # uname -r
-    # lscpu
-    # cat /sys/class/net/eth0/address
-    # uptime -s
-    # uptime -p
-    # TODO: Weather API
     return [
         {
             'resource_name': RESOURCE_FIELDS_BY_NAME['Linux kernel version'],

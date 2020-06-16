@@ -13,7 +13,7 @@ RESOURCE_FIELDS = [
     ('5ee3b8af24587fb41c74ad33', 'CPU average usage'),
     ('5ee3b99e9e62e3722c6652e5', 'CPU average temperature'),
     ('5ee718d260323a7836891238', 'per-CPU average usage'),
-    ('5ee7192fe9d0ec9d96ee298a', 'Top 5 CPU consuming processes'),
+    #('5ee7192fe9d0ec9d96ee298a', 'Top 5 CPU consuming processes'),
     # GPU
     ('5ee71b8fde616ffedec72dfb', 'GPU average temperature'),
     # RAM
