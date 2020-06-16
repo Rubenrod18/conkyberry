@@ -7,10 +7,28 @@ from app.models import Resource as ResourceModel, ResourceData as ResourceDataMo
 
 
 def _get_cpu_data(resource_graph: ResourceGraphModel) -> list:
-    top_five_processes = [(p.pid, p.info['name'], sum(p.info['cpu_times'])) for p in
-                          sorted(psutil.process_iter(['name', 'cpu_times']),
-                                 key=lambda p: sum(p.info['cpu_times'][:2]))][-5:]
+    def _key_fnc(p) -> float:
+        try:
+            p = psutil.Process(p.pid)
+            return p.cpu_percent(interval=1)
+        except Exception:
+            return 0.0
+
+    tmp = sorted(
+        psutil.process_iter(['name', 'cpu_percent']),
+        key=lambda p: _key_fnc(p)
+    )
+    top_five_processes = [(p.pid, p.info['name'], p.info['cpu_percent']) for p in tmp][-5:]
     top_five_processes.reverse()
+
+    for i, item in enumerate(top_five_processes):
+        p = psutil.Process(item[0])
+        for x in range(100):
+            tmp = p.cpu_percent(interval=1)
+            if tmp != 0.0:
+                item = (item[0], item[1], tmp)
+                top_five_processes[i] = item
+                break
 
     return [
         {
