@@ -5,10 +5,6 @@ All notable changes to this project will be documented in this file. See [standa
 ## 0.1.0 (2020-10-11)
 
 
-### ⚠ BREAKING CHANGES
-
-* **database:** add MongoDB fields in environment file.
-
 ### Features
 
 * add Flask integration ([20caa88](https://github.com/Rubenrod18/conkyberry/commit/20caa8824525e3fc3fbb586deba733d811802439))
