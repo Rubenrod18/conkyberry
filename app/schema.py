@@ -2,7 +2,10 @@ import graphene
 from bson import ObjectId
 from graphene_mongo import MongoengineObjectType
 
-from .models import Resource as ResourceModel, ResourceData as ResourceDataModel, ResourceGraph as ResourceGraphModel
+from .models import (Resource as ResourceModel,
+                     ResourceData as ResourceDataModel,
+                     ResourceGraph as ResourceGraphModel,
+                     ResourceField as ResourceFieldModel)
 
 
 class CustomNode(graphene.Node):
@@ -19,6 +22,10 @@ class ResourceGraph(MongoengineObjectType):
         model = ResourceGraphModel
         interfaces = (CustomNode,)
 
+class ResourceField(MongoengineObjectType):
+    class Meta:
+        model = ResourceFieldModel
+        interfaces = (CustomNode,)
 
 class ResourceData(MongoengineObjectType):
     class Meta:
@@ -44,4 +51,5 @@ class Query(graphene.ObjectType):
         return ResourceModel.objects(id=ObjectId(id)).get()
 
 
-schema = graphene.Schema(query=Query, types=[Resource, ResourceData, ResourceGraph])
+schema = graphene.Schema(query=Query, types=[Resource, ResourceData,
+                                             ResourceGraph, ResourceField])
