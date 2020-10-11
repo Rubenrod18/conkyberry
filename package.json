@@ -24,6 +24,7 @@
     "node": ">=10.18.1"
   },
   "devDependencies": {
-    "standard-version": "^8.0.0"
+    "npm-check": "^5.9.2",
+    "standard-version": "^9.0.0"
   }
 }
