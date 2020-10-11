@@ -1,8 +1,0 @@
-# requirements.in
-Flask
-Flask-GraphQL
-flask-mongoengine
-graphene-mongo
-pip-tools
-psutil
-python-dotenv
