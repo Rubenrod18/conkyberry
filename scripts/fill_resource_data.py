@@ -1,3 +1,4 @@
+import json
 import subprocess
 
 import psutil
@@ -23,7 +24,8 @@ def _get_cpu_data(resource_graph: ResourceGraphModel) -> list:
                 id=RESOURCE_FIELDS_BY_NAME['CPU average temperature']
             ),
             'resource_graph': resource_graph,
-            'resource_value': str(psutil.sensors_temperatures().get('cpu-thermal')[0].current),
+            'resource_value': str(psutil.sensors_temperatures()
+                                  .get('cpu_thermal')[0].current),
         },
         {
             'resource_field': ResourceFieldModel.objects.get(
@@ -88,38 +90,56 @@ def _get_memory_data(resource_graph: ResourceGraphModel) -> list:
 
 
 def _get_system_data(resource_graph: ResourceGraphModel) -> list:
+    cpu_info = json.loads(
+        subprocess.run(['lscpu', '--json'], capture_output=True).stdout
+    )
+    cpu_fields = {'Architecture:', 'CPU(s):', 'Thread(s) per core:',
+                  'Core(s) per socket:', 'Vendor ID:', 'Model name:',
+                  'CPU max MHz:', 'CPU min MHz:'}
+
+    cpu_info_data = [item for item in cpu_info.get('lscpu')
+                     if item.get('field') in cpu_fields]
+
     return [
         {
             'resource_field': ResourceFieldModel.objects.get(
                 id=RESOURCE_FIELDS_BY_NAME['Linux kernel version']
             ),
             'resource_graph': resource_graph,
-            'resource_value': str(subprocess.run(['uname', '-r'],
-                                                 capture_output=True).stdout.decode('utf-8')),
+            'resource_value': str(
+                subprocess.run(['uname', '-r'],
+                               capture_output=True).stdout.decode('utf-8')
+                .replace('\n', '')
+            ),
         },
         {
             'resource_field': ResourceFieldModel.objects.get(
                 id=RESOURCE_FIELDS_BY_NAME['CPU model']
             ),
             'resource_graph': resource_graph,
-            'resource_value': str(subprocess.run(['lscpu'],
-                                                 capture_output=True).stdout.decode('utf-8')),
+            'resource_value': str(cpu_info_data),
         },
         {
             'resource_field': ResourceFieldModel.objects.get(
                 id=RESOURCE_FIELDS_BY_NAME['MAC']
             ),
             'resource_graph': resource_graph,
-            'resource_value': str(subprocess.run(['cat', '/sys/class/net/eth0/address'],
-                                                 capture_output=True).stdout.decode('utf-8')),
+            'resource_value': str(
+                subprocess.run(['cat', '/sys/class/net/eth0/address'],
+                               capture_output=True).stdout.decode('utf-8')
+                .replace('\n', '')
+            ),
         },
         {
             'resource_field': ResourceFieldModel.objects.get(
                 id=RESOURCE_FIELDS_BY_NAME['Uptime server']
             ),
             'resource_graph': resource_graph,
-            'resource_value': str(subprocess.run(['uptime', '-s'],
-                                                 capture_output=True).stdout.decode('utf-8')),
+            'resource_value': str(
+                subprocess.run(['uptime', '-s'],
+                               capture_output=True).stdout.decode('utf-8')
+                .replace('\n', '')
+            ),
         },
     ]
 
@@ -148,12 +168,16 @@ def _get_network_data(resource_graph: ResourceGraphModel) -> list:
     ps = subprocess.run(['vnstat', '--oneline'], capture_output=True)
     vnstat_data = ps.stdout.decode('utf-8').split(';')
 
-    private_ip_command = "ifconfig | " \
-                         "grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | " \
-                         "grep -Eo '([0-9]*\.){3}[0-9]*' | " \
-                         "grep -v '127.0.0.1'"
-    ps = subprocess.Popen(private_ip_command, shell=True, stdout=subprocess.PIPE)
+    private_ip_command = ("ifconfig | "
+                          "grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | "
+                          "grep -Eo '([0-9]*\.){3}[0-9]*' | "
+                          "grep -v '127.0.0.1'")
+    ps = subprocess.Popen(private_ip_command, shell=True,
+                          stdout=subprocess.PIPE)
     private_ip = ps.stdout.read().decode('utf-8').replace('\\n', '')
+    public_ip = (subprocess.run(['curl', 'https://ipinfo.io/ip'],
+                                capture_output=True)
+                 .stdout.decode('utf-8').replace('\n', ''))
 
     return [
         {
@@ -161,15 +185,14 @@ def _get_network_data(resource_graph: ResourceGraphModel) -> list:
                 id=RESOURCE_FIELDS_BY_NAME['Public IP']
             ),
             'resource_graph': resource_graph,
-            'resource_value': subprocess.run(['curl', 'https://ipinfo.io/ip'], capture_output=True).stdout.decode(
-                'utf-8'),
+            'resource_value': public_ip,
         },
         {
             'resource_field': ResourceFieldModel.objects.get(
                 id=RESOURCE_FIELDS_BY_NAME['Private IP']
             ),
             'resource_graph': resource_graph,
-            'resource_value': str(private_ip),
+            'resource_value': str(private_ip).replace('\n', ''),
         },
         {
             'resource_field': ResourceFieldModel.objects.get(
@@ -230,7 +253,6 @@ def fill_resource_data() -> None:
     )
 
     for item in data:
-        print(item)
         resource_data = ResourceDataModel(**item)
         resource_data_list.append(resource_data)
 

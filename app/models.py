@@ -20,7 +20,7 @@ RESOURCE_FIELDS = [
     ('5ee71bb5aa4faf99ed69296c', 'SWAP average usage', 'float'),
     # System
     ('5ee71bcb43fc0a4a44b07d4e', 'Linux kernel version', 'str'),
-    ('5ee71bd389a104a4514ce702', 'CPU model', 'str'),
+    ('5ee71bd389a104a4514ce702', 'CPU model', 'list'),
     ('5ee71bdd93e87cbb3b767e26', 'MAC', 'str'),
     ('5ee71be5f7bb1f60cefc2cb4', 'Uptime server', 'str'),
     # Hard disk
