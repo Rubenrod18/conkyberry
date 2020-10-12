@@ -4,7 +4,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-class Config():
+
+class Config:
     # Flask
     DEVELOPMENT = False
     DEBUG = False
