@@ -1,0 +1,7 @@
+[general]
+ignore=body-is-missing
+contrib=contrib-title-conventional-commits,CT1
+
+[contrib-title-conventional-commits]
+# Specify allowed commit types. For details see: https://www.conventionalcommits.org/
+types = build,ci,chore,docs,feat,fix,perf,refactor,revert,style,test
