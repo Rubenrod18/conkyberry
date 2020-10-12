@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from app import create_app
 from app.models import (Resource as ResourceModel,
                         ResourceField as ResourceFieldModel)
-from scripts import init_db
+from scripts.init_db import init_db
 from scripts.fill_resource_data import fill_resource_data
 
 load_dotenv()
