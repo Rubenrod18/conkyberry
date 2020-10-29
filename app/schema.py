@@ -22,10 +22,12 @@ class ResourceGraph(MongoengineObjectType):
         model = ResourceGraphModel
         interfaces = (CustomNode,)
 
+
 class ResourceField(MongoengineObjectType):
     class Meta:
         model = ResourceFieldModel
         interfaces = (CustomNode,)
+
 
 class ResourceData(MongoengineObjectType):
     class Meta:
